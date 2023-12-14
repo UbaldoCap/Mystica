@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class RegistroCreature {
@@ -16,16 +17,8 @@ public class RegistroCreature {
         this.registro = registro;
     }
     public void aggiungiCreatura (CreaturaMagica creaturaMagica) {
-        try {
-            if (creaturaMagica.getNome() != null && creaturaMagica.getTipo() != null && creaturaMagica.getAbilitaSpeciale() != null && creaturaMagica.getLivelloPotenza() != null) {
                 registro.add(creaturaMagica);
-                System.out.println(creaturaMagica.getNome() + " creatura aggiunta con successo");
-            } else {
-                System.out.println("errore inserimento creatura");
-            }
-        } catch (Exception ignored) {
-        }
-
+                System.out.println("Creatura aggiunta con successo");
     }
 
     public void rimuoviCreatura (CreaturaMagica creaturaMagica){
@@ -44,21 +37,19 @@ public class RegistroCreature {
     }
 
     public void sfida (CreaturaMagica creaturaHero, CreaturaMagica creaturaOppo) {
-        try {
-            if (creaturaHero != null && creaturaOppo != null) {
-                System.out.println("inzio sfida");
-            }
-            if (creaturaHero.getLivelloPotenza() > creaturaOppo.getLivelloPotenza()) {
+        if (creaturaHero.getLivelloPotenza() > creaturaOppo.getLivelloPotenza()) {
             System.out.println(creaturaHero.getNome() + " usa " + creaturaHero.getAbilitaSpeciale() + " ed è superefficace, " +
                     creaturaOppo.getNome() + " è stato sconfitto");
             System.out.println("hai vinto la sfida");
-        } else {
+        } else if (creaturaHero.getLivelloPotenza() < creaturaOppo.getLivelloPotenza()){
             System.out.println(creaturaHero.getNome() + " usa " + creaturaHero.getAbilitaSpeciale() + " ma non è efficace," +
                     creaturaOppo.getNome() + " contrattacca con " + creaturaOppo.getAbilitaSpeciale() + " e sconfigge " +
                     creaturaHero.getNome());
             System.out.println("hai perso la sfida");
-        }
-        } catch (Exception ignored) {
+        } else {
+            System.out.println(creaturaHero.getNome() + " usa " + creaturaHero.getAbilitaSpeciale() + " ma non è efficace," +
+                    creaturaOppo.getNome() + " contrattacca con " + creaturaOppo.getAbilitaSpeciale() + " ma non è efficace");
+            System.out.println("Nessuno vince la sfida");
         }
     }
 
@@ -77,24 +68,21 @@ public class RegistroCreature {
         switch (scelta) {
             case "1":
                 System.out.println("inserisci nome:");
-                String nomec = in.nextLine();
+                String nomec = checkNome();
                 System.out.println("inserisci tipo (luce / oscurità):");
-                String tipoc = in.nextLine();
+                String tipoc = checkTipo();
                 System.out.println("inserisci abilità speciale:");
-                String abilitac = in.nextLine();
+                String abilitac = checkAbilita();
                 System.out.println("inserisci livello potenza:");
-                try {
-                    Integer livelloc = in.nextInt();
-                    CreaturaMagica creaturaMagica = new CreaturaMagica(nomec, tipoc, abilitac, livelloc);
-                    aggiungiCreatura(creaturaMagica);
-                } catch (Exception e) {
-                    System.out.println("valore potenza nullo");
-                }
+                Integer livelloc = checkLivello();
+                CreaturaMagica creaturaMagica = new CreaturaMagica(nomec, tipoc, abilitac, livelloc);
+                aggiungiCreatura(creaturaMagica);
                 String esc = in.nextLine();
                 start();
                 break;
             case "2":
                 System.out.println("Inserire nome creatura da eliminare");
+                visualizzaCreature();
                 String creaturaOut = in.nextLine();
                 for (CreaturaMagica creaturaMagica1: registro) {
                     if (creaturaMagica1.getNome().equals(creaturaOut)) {
@@ -156,8 +144,10 @@ public class RegistroCreature {
                 }
             case "5":
                 System.out.println("inserisci il nome del tuo eroe");
+                visualizzaCreature();
                 String nome = in.nextLine();
                 System.out.println("inserisci il nome dello sfidante");
+                visualizzaCreature();
                 String nomeVill = in.nextLine();
                 CreaturaMagica hero = null;
                 for (CreaturaMagica creaturaMagica1 : registro) {
@@ -182,6 +172,60 @@ public class RegistroCreature {
                 String exx = in.nextLine();
                 start();
         }
+    }
+
+    public String checkNome() {
+        Scanner in = new Scanner(System.in);
+        String nome = in.nextLine();
+        while (nome.isEmpty()) {
+            System.out.println("Nome non valido");
+            System.out.println("Inserire nome");
+            nome = in.nextLine();
+        }
+        return nome;
+    }
+
+    public String checkTipo() {
+        Scanner in = new Scanner(System.in);
+        String tipo = in.nextLine();
+        while (!Objects.equals(tipo, "luce") && !Objects.equals(tipo, "oscurità")) {
+            System.out.println("Tipo non valido");
+            System.out.println("Inserire luce o oscurità");
+            tipo = in.nextLine();
+        }
+        return tipo;
+    }
+
+    public String checkAbilita(){
+        Scanner in = new Scanner(System.in);
+        String abilita = in.nextLine();
+        while (abilita.isEmpty()) {
+            System.out.println("Nome non valido");
+            System.out.println("Inserire nome");
+            abilita = in.nextLine();
+        }
+        return abilita;
+    }
+
+    public Integer checkLivello() {
+        int livello = 0;
+        try {
+            Scanner in = new Scanner(System.in);
+            livello = in.nextInt();
+            while (livello < 0) {
+                System.out.println("Livello non valido");
+                System.out.println("Inserire livello");
+                livello = in.nextInt();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("Livello non valido");
+            System.out.println("Inserire livello");
+        }
+        if (livello == 0) {
+            checkLivello();
+        }
+        return livello;
     }
 
     @Override

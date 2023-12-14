@@ -1,5 +1,6 @@
 import java.security.InvalidParameterException;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class CreaturaMagica {
     private String nome;
@@ -8,31 +9,10 @@ public class CreaturaMagica {
     private Integer livelloPotenza;
 
     public CreaturaMagica(String nome, String tipo, String abilitaSpeciale, Integer livelloPotenza) {
-        try {
-            if (!livelloPotenza.toString().isEmpty() && livelloPotenza > 0) {
-                this.livelloPotenza = livelloPotenza;
-            }
-        } catch (Exception ignored) {
-        }
-        try {
-            if (Objects.equals(tipo, "luce") || Objects.equals(tipo, "oscurità") && !tipo.isEmpty()) {
-                this.tipo = tipo;
-            }
-        } catch (InvalidParameterException ignored) {
-        }
-        try {
-            if (nome != null && !nome.isEmpty()) {
-                this.nome = nome;
-            }
-        } catch (Exception ignored) {
-        }
-        try {
-            if (abilitaSpeciale != null && !abilitaSpeciale.isEmpty()) {
-                this.abilitaSpeciale = abilitaSpeciale;
-            }
-        } catch (Exception ignored) {
-        }
-
+        this.nome = nome;
+        this.tipo = tipo;
+        this.abilitaSpeciale = abilitaSpeciale;
+        this.livelloPotenza = livelloPotenza;
     }
 
     public String getNome() {
